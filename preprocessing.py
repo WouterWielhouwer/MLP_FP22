@@ -16,7 +16,6 @@ def create_df(dataset, columnnames):
     df = dataset[columnnames]
     df = df.rename(
         columns={columnnames[0]: "character", columnnames[1]: "line"})
-    df.character = pd.Categorical(df.character)
 
     return df
 
@@ -31,6 +30,7 @@ def pool_other(df, n=7):
     names = df.character.value_counts().index.tolist()[:n]
     df["character"] = df["character"].apply(
         lambda x: "other" if x not in names else x)
+    df.character = pd.Categorical(df.character)
 
     return df
 
@@ -73,7 +73,7 @@ def generate_features(train_data, test_data, ngram_range):
     """
 
     vectorizer = CountVectorizer()
-    vectorizer.ngram_range = ngram_range
+    vectorizer.ngram_range = (ngram_range, ngram_range)
 
     train_features = vectorizer.fit_transform(train_data).toarray()
     test_features = vectorizer.transform(test_data).toarray()
