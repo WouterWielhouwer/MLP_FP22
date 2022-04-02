@@ -68,3 +68,6 @@ def main():
     unique_labels, word_likelihoods, priors = fit(train_feats, train_labels)
     predictions = predict(unique_labels, word_likelihoods, priors, test_feats)
     print(predictions)
+
+if __name__ == "__main__":
+    main()
