@@ -2,7 +2,6 @@ from preprocessing import *
 import numpy as np
 import pandas as pd
 from sklearn.feature_extraction.text import CountVectorizer
-from abs_custom_classifier_with_feature_generator import CustomClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn import metrics
 
