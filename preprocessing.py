@@ -1,7 +1,7 @@
 import pandas as pd
 import os
 import re
-import nltk
+from nltk import word_tokenize
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import CountVectorizer
 
@@ -72,7 +72,7 @@ def generate_features(train_data, test_data, ngram_range):
     :return: vectorized train features and test features
     """
 
-    vectorizer = CountVectorizer()
+    vectorizer = CountVectorizer(tokenizer=word_tokenize)
     vectorizer.ngram_range = (ngram_range, ngram_range)
 
     train_features = vectorizer.fit_transform(train_data).toarray()
