@@ -4,7 +4,7 @@ import numpy as np
 from sklearn import neighbors
 
 
-def fit_pred(df, name, n_char, size=10000, n_gram=1, other=False):
+def fit_pred(df, name, n_char, size=10000, n_gram=2, other=False):
     df = pool_other(df, n_char)
     df.character = pd.Categorical(df.character)
 
@@ -51,7 +51,7 @@ def main():
     for i in [3, 5, 7, 10]:
         try:
             for x in [True, False]:
-                fit_pred(df_south, "South Park", i, size=5000, other=x)
+                fit_pred(df_south, "South Park", i, size=3000, other=x)
 
         except Exception as e:
             print(e)
@@ -59,7 +59,7 @@ def main():
     for i in [3, 5, 7, 10]:
         try:
             for x in [True, False]:
-                fit_pred(df_got, "Game of Thrones", i, size=5000, other=x)
+                fit_pred(df_got, "Game of Thrones", i, size=3000, other=x)
         except Exception as e:
             print(e)
 
