@@ -3,6 +3,7 @@ from sklearn.svm import SVC
 from preprocessing import *
 from sklearn.metrics import accuracy_score
 
+
 def train_test(train_feats, test_feats, train_labels):
     """ Trains with the training features and training labels, test on the test features and returns the predicted test labels"""
     cls = SVC(kernel='linear')
@@ -10,6 +11,7 @@ def train_test(train_feats, test_feats, train_labels):
     predicted_test_labels = cls.predict(test_feats)
 
     return predicted_test_labels
+
 
 def south_park():
     """"Reads the South Park file and returns the dataset"""
@@ -19,6 +21,7 @@ def south_park():
 
     return (df, south.name)
 
+
 def game_of_thrones():
     """""Reads the Game of Thrones file and returns the dataset"""
     got = pd.read_csv("Game_of_Thrones_Script/Game_of_Thrones_Script.csv")
@@ -27,21 +30,27 @@ def game_of_thrones():
 
     return (df, got.name)
 
+
 def run(df, name, n_characters, n_gram):
     """"Runs the training and testing and evaluates the results"""
-    df = pool_other(df, n_characters) # Make n classes in dataset df, were n is the number of characters, the rest will get the 'Other' class
-    df.character = pd.Categorical(df.character) # Makes the characters categorical
-    df = remove_other(df) # Removes the 'Other' class from the dataset
+    df = pool_other(df,
+                    n_characters)  # Make n classes in dataset df, were n is the number of characters, the rest will get the 'Other' class
+    df.character = pd.Categorical(df.character)  # Makes the characters categorical
+    df = remove_other(df)  # Removes the 'Other' class from the dataset
 
-    train_data, test_data, train_labels, test_labels = split_train_test(df, 0.25) # Splits the dataset in training and testing
-    train_feats, test_feats = generate_features(train_data, test_data, n_gram) # Generates features, were n-gram could be for example 2 (bigram)
-    predicted_labels = train_test(train_feats, test_feats, train_labels) # Training and testing
-    accuracy = accuracy_score(test_labels, predicted_labels) # Calculating accuracy
+    train_data, test_data, train_labels, test_labels = split_train_test(df,
+                                                                        0.25)  # Splits the dataset in training and testing
+    train_feats, test_feats = generate_features(train_data, test_data,
+                                                n_gram)  # Generates features, were n-gram could be for example 2 (bigram)
+    predicted_labels = train_test(train_feats, test_feats, train_labels)  # Training and testing
+    accuracy = accuracy_score(test_labels, predicted_labels)  # Calculating accuracy
 
     print(name, n_characters, n_gram, accuracy)
     f = open("scores.txt", "a")
-    f.write("dataset: " + str(name) + '\n' + "number of characters:" + str(n_characters) + '\n' + 'ngrams:' + str(n_gram) + '\n' + 'accuracy: ' + str(accuracy) + "\n\n\n")
+    f.write("dataset: " + str(name) + '\n' + "number of characters:" + str(n_characters) + '\n' + 'ngrams:' + str(
+        n_gram) + '\n' + 'accuracy: ' + str(accuracy) + "\n\n\n")
     f.close()
+
 
 def main():
     start_time = time.time()
@@ -56,6 +65,7 @@ def main():
         run(got, got_name, n, 2)
         run(got, got_name, n, 3)
     print("--- %s seconds ---" % (time.time() - start_time))
+
 
 if __name__ == '__main__':
     main()
