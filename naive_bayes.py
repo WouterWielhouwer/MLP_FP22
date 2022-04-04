@@ -1,73 +1,62 @@
+import time
 from preprocessing import *
-import numpy as np
-import pandas as pd
-from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.metrics import accuracy_score
 from sklearn.naive_bayes import GaussianNB
-from sklearn import metrics
 
+def train_test(train_feats, test_feats, train_labels):
+    """ Trains with the training features and training labels, test on the test features and returns the predicted test labels"""
+    cls = GaussianNB()
+    cls.fit(train_feats, train_labels)
+    predicted_test_labels = cls.predict(test_feats)
 
-def fit(train_feats, train_labels):
-    """ Fit training data for Naive Bayes classifier """
-    total_training_sentences = train_feats.shape[0]
-    total_by_class = np.bincount(train_labels)
-    priors = [(item / total_training_sentences) for item in total_by_class]  # calculating the priors
+    return predicted_test_labels
 
-    unique_labels = np.unique(train_labels)  # get unique labels
-    features_by_label = [[] for item in unique_labels]  # creates an empty list for each unique label
-    for tweet, label in zip(train_feats, train_labels):
-        features_by_label[label].append(tweet)  # append all the feature vectors to corresponding label
+def south_park():
+    """"Reads the South Park file and returns the dataset"""
+    south = pd.read_csv("South_Park/All-seasons.csv", quotechar='"')
+    south.name = 'South Park'
+    df = create_df(south, ["Character", "Line"])
 
-    feature_sum_by_label = [[] for item in unique_labels]
-    for label in unique_labels:
-        feature_sum_by_label[label] = np.sum(features_by_label[label], axis=0,
-                                             initial=1)  # initial=1 is alpha smoothing, accumulating the word counts per label
+    return (df, south.name)
 
-    word_likelihoods = []
-    for emotion in feature_sum_by_label:
-        word_likelihoods_per_emotion = [(item / total_by_class[0]) for item in
-                                        emotion]  # divide word counts by total number of words for each class
-        word_likelihoods.append(word_likelihoods_per_emotion)
-    word_likelihoods = np.array(word_likelihoods)  # convert to numpy array
+def game_of_thrones():
+    """""Reads the Game of Thrones file and returns the dataset"""
+    got = pd.read_csv("Game_of_Thrones_Script/Game_of_Thrones_Script.csv", quotechar='"')
+    got.name = 'Game Of Thrones'
+    df = create_df(got, ["Name", "Sentence"])
 
-    return unique_labels, word_likelihoods, priors
+    return (df, got.name)
 
+def run(df, name, n_characters, n_gram):
+    """"Runs the training and testing and evaluates the results"""
+    df = pool_other(df, n_characters) # Make n classes in dataset df, were n is the number of characters, the rest will get the 'Other' class
+    df.character = pd.Categorical(df.character) # Makes the characters categorical
+    df = remove_other(df) # Removes the 'Other' class from the dataset
 
-def predict(unique_labels, word_likelihoods, priors, test_feats):
-    """ Predict classes with provided test features """
-    predictions = []
-    for i, test_tweet in enumerate(test_feats):
-        word_exists_index = np.flatnonzero(test_tweet)  # get word indexes non-zero count
-        likelihoods_of_tweet_by_label = [1 for item in unique_labels]
-        for label in unique_labels:
-            for index in word_exists_index:
-                likelihoods_of_tweet_by_label[label] *= (word_likelihoods[label][index] ** test_tweet[
-                    index])  # calculate likelihood of the tweet
+    train_data, test_data, train_labels, test_labels = split_train_test(df, 0.25) # Splits the dataset in training and testing
+    train_feats, test_feats = generate_features(train_data, test_data, n_gram) # Generates features, were n-gram could be for example 2 (bigram)
+    predicted_labels = train_test(train_feats, test_feats, train_labels)  # Training and testing
+    accuracy = accuracy_score(test_labels, predicted_labels) # Calculating accuracy
 
-        conditional_probabilities = [(likelihoods_of_tweet_by_label[0] * priors[0]),
-                                     (likelihoods_of_tweet_by_label[1] * priors[1]),
-                                     (likelihoods_of_tweet_by_label[2] * priors[2]), (
-                                                 likelihoods_of_tweet_by_label[3] * priors[
-                                             3])]  # calculating conditional probabilties per class
-        prediction = np.argmax(
-            np.array(conditional_probabilities))  # get the label of the tweet with the highest conditonal probability
-        predictions.append(prediction)
-
-    return predictions
-
+    print(name, n_characters, n_gram, accuracy)
+    f = open("scores.txt", "a")
+    f.write("dataset: " + str(name) + '\n' + "number of characters:" + str(n_characters) + '\n' + 'ngrams:' + str(n_gram) + '\n' + 'accuracy: ' + str(accuracy) + "\n\n\n")
+    f.close()
 
 def main():
-    south = pd.read_csv("South_Park/All-seasons.csv")
-    south.name = 'South Park'
+    start_time = time.time()
+    n_characters = [3, 5, 7, 10]
+    sp, south_name = south_park()
+    got, got_name = game_of_thrones()
+    for n in n_characters:
+        run(sp, south_name, n, 1)
+        run(sp, south_name, n, 2)
+        run(sp, south_name, n, 3)
+        run(got, got_name, n, 1)
+        run(got, got_name, n, 2)
+        run(got, got_name, n, 3)
+    print("--- %s seconds ---" % (time.time() - start_time))
 
-    df = create_df(south, ["Character", "Line"])
-    df = pool_other(df, 3)
-
-    train_data, test_data, train_labels, test_labels = split_train_test(df, 0.25)
-    train_feats, test_feats = generate_features(train_data, test_data, 2)
-
-    unique_labels, word_likelihoods, priors = fit(train_feats, train_labels)
-    predictions = predict(unique_labels, word_likelihoods, priors, test_feats)
-    print(predictions)
 
 if __name__ == "__main__":
     main()
