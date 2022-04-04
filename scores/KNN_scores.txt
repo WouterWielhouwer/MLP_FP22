@@ -1,0 +1,34 @@
+Unigram
+
+best score for South Park with 3 characters, with class "Other", sample size of 5000 and ngram=1: 0.6544 
+ k = 17
+best score for South Park with 3 characters, without class "Other", sample size of 5000 and ngram=1: 0.588 
+ k = 15
+best score for South Park with 5 characters, with class "Other", sample size of 5000 and ngram=1: 0.748 
+ k = 19
+best score for South Park with 5 characters, without class "Other", sample size of 5000 and ngram=1: 0.588 
+ k = 15
+best score for South Park with 7 characters, with class "Other", sample size of 5000 and ngram=1: 0.748 
+ k = 19
+best score for South Park with 7 characters, without class "Other", sample size of 5000 and ngram=1: 0.588 
+ k = 15
+best score for South Park with 10 characters, with class "Other", sample size of 5000 and ngram=1: 0.748 
+ k = 19
+best score for South Park with 10 characters, without class "Other", sample size of 5000 and ngram=1: 0.588 
+ k = 15
+best score for Game of Thrones with 3 characters, with class "Other", sample size of 5000 and ngram=1: 0.8536 
+ k = 11
+best score for Game of Thrones with 3 characters, without class "Other", sample size of 5000 and ngram=1: 0.6174033149171271 
+ k = 9
+best score for Game of Thrones with 5 characters, with class "Other", sample size of 5000 and ngram=1: 0.8912 
+ k = 7
+best score for Game of Thrones with 5 characters, without class "Other", sample size of 5000 and ngram=1: 0.6174033149171271 
+ k = 9
+best score for Game of Thrones with 7 characters, with class "Other", sample size of 5000 and ngram=1: 0.8912 
+ k = 7
+best score for Game of Thrones with 7 characters, without class "Other", sample size of 5000 and ngram=1: 0.6174033149171271 
+ k = 9
+best score for Game of Thrones with 10 characters, with class "Other", sample size of 5000 and ngram=1: 0.8912 
+ k = 7
+best score for Game of Thrones with 10 characters, without class "Other", sample size of 5000 and ngram=1: 0.6174033149171271 
+ k = 9
