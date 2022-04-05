@@ -55,14 +55,12 @@ def main():
     sp, south_name = south_park()
     got, got_name = game_of_thrones()
     for n in n_characters:
-        df_copy_south = sp.copy(deep=True)
-        df_copy_got = got.copy(deep=True)
-        run(df_copy_south, south_name, n, 1)
-        run(df_copy_south, south_name, n, 2)
-        run(df_copy_south, south_name, n, 3)
-        run(df_copy_got, got_name, n, 1)
-        run(df_copy_got, got_name, n, 2)
-        run(df_copy_got, got_name, n, 3)
+        run(sp.copy(deep=True), south_name, n, 1)
+        run(sp.copy(deep=True), south_name, n, 2)
+        run(sp.copy(deep=True), south_name, n, 3)
+        run(got.copy(deep=True), got_name, n, 1)
+        run(got.copy(deep=True), got_name, n, 2)
+        run(got.copy(deep=True), got_name, n, 3)
     print("--- %s seconds ---" % (time.time() - start_time))
 
 if __name__ == '__main__':

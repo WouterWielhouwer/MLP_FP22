@@ -5,7 +5,7 @@ from sklearn.dummy import DummyClassifier
 from sklearn import neighbors
 
 
-def fit_pred(df, name, n_char, size=10000, n_gram=2, other=False):
+def fit_pred(df, name, n_char, size=20000, n_gram=1, other=False):
     df = pool_other(df, n_char)
     df.character = pd.Categorical(df.character)
 
@@ -54,21 +54,20 @@ def main():
 
     for i in [3, 5, 7, 10]:
         try:
-            for x in [True, False]:
-                df_copy = df_south.copy(deep=True)
-                fit_pred(df_copy, "South Park", i, size=3000, other=x)
+            #for x in [True, False]:
+            df_copy = df_south.copy(deep=True)
+            fit_pred(df_copy, "South Park", i, size=3000, other=False)
 
         except Exception as e:
             print(e)
 
     for i in [3, 5, 7, 10]:
         try:
-            for x in [True, False]:
-                df_copy = df_got.copy(deep=True)
-                fit_pred(df_copy, "Game of Thrones", i, size=3000, other=x)
+            #for x in [True, False]:
+            df_copy = df_got.copy(deep=True)
+            fit_pred(df_copy, "Game of Thrones", i, size=3000, other=False)
         except Exception as e:
             print(e)
-
 
 if __name__ == "__main__":
     main()

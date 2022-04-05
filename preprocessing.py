@@ -72,7 +72,7 @@ def generate_features(train_data, test_data, ngram_range):
     :return: vectorized train features and test features
     """
 
-    vectorizer = CountVectorizer(tokenizer=word_tokenize)
+    vectorizer = CountVectorizer(tokenizer=word_tokenize, max_features=10000)
     vectorizer.ngram_range = (ngram_range, ngram_range)
 
     train_features = vectorizer.fit_transform(train_data).toarray()
