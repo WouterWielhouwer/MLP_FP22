@@ -1,6 +1,7 @@
 from preprocessing import *
 import pandas as pd
 import numpy as np
+from sklearn.dummy import DummyClassifier
 from sklearn import neighbors
 
 
@@ -30,6 +31,10 @@ def fit_pred(df, name, n_char, size=10000, n_gram=2, other=False):
             best_score = score
             best_k = k
 
+    dummy_clf = DummyClassifier(strategy="most_frequent")
+    dummy_clf.fit(X_train_vec, y_train)
+    print("Baseline: ", dummy_clf.score(X_test_vec, y_test))
+
     print("best score for %s with %s characters, %s class \"Other\", sample size of %s and ngram=%s: %s \n k = %s" % (name,
                                                                                                        str(n_char),
                                                                                                        other_str,
@@ -37,7 +42,6 @@ def fit_pred(df, name, n_char, size=10000, n_gram=2, other=False):
                                                                                                        str(n_gram),
                                                                                                        str(best_score),
                                                                                                        str(best_k)))
-
 
 def main():
     south = pd.read_csv("South_Park/All-seasons.csv")
@@ -51,7 +55,8 @@ def main():
     for i in [3, 5, 7, 10]:
         try:
             for x in [True, False]:
-                fit_pred(df_south, "South Park", i, size=3000, other=x)
+                df_copy = df_south.copy(deep=True)
+                fit_pred(df_copy, "South Park", i, size=3000, other=x)
 
         except Exception as e:
             print(e)
@@ -59,7 +64,8 @@ def main():
     for i in [3, 5, 7, 10]:
         try:
             for x in [True, False]:
-                fit_pred(df_got, "Game of Thrones", i, size=3000, other=x)
+                df_copy = df_got.copy(deep=True)
+                fit_pred(df_copy, "Game of Thrones", i, size=3000, other=x)
         except Exception as e:
             print(e)
 
