@@ -51,6 +51,25 @@ def get_mapping(df):
     return dict(enumerate(df['character'].cat.categories))
 
 
+def tok_norm_sent(line):
+    """
+    :param line: string of text
+    :return tokenised and normalized string of text
+    """
+    tokens = word_tokenize(line.lower())
+    norm = ["."]
+    for token in tokens:
+        if token in "!?":
+            token = "."
+        elif token != ",":
+            norm.append(token)
+    return norm
+
+
+def dummy(doc):
+    return doc
+
+
 def split_train_test(df, split=.25):
     """
     :param df: pandas dataframe
@@ -72,7 +91,7 @@ def generate_features(train_data, test_data, ngram_range):
     :return: vectorized train features and test features
     """
 
-    vectorizer = CountVectorizer(tokenizer=word_tokenize)
+    vectorizer = CountVectorizer(tokenizer=tok_norm_sent, preprocessor=dummy)
     vectorizer.ngram_range = (ngram_range, ngram_range)
 
     train_features = vectorizer.fit_transform(train_data).toarray()
