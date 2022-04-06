@@ -62,7 +62,7 @@ def tok_norm_sent(line):
         if token in "!?":
             token = "."
             norm.append(token)
-        elif token not in ",()\"":
+        elif token not in ",()\"`":
             norm.append(token)
     return norm
 
