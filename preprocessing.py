@@ -54,14 +54,15 @@ def get_mapping(df):
 def tok_norm_sent(line):
     """
     :param line: string of text
-    :return tokenised and normalized string of text
+    :return tokenised and normalized string of text. A period is also added before the first word to indicate start of sentence.
     """
     tokens = word_tokenize(line.lower())
     norm = ["."]
     for token in tokens:
         if token in "!?":
             token = "."
-        elif token != ",":
+            norm.append(token)
+        elif token not in ",()\"":
             norm.append(token)
     return norm
 
